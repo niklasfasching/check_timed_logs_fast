@@ -1,6 +1,6 @@
 [package]
 name = "check_timed_logs_fast"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["cmichi <mich@elmueller.net>"]
 license = "MIT"
 description = "A nagios plugin which monitors log files for the occurrence of regular expressions."
@@ -17,3 +17,5 @@ glob = "0.2.11"
 tempfile = "3.0.5"
 filetime = "0.2.1"
 fancy-regex = "0.1.0"
+regex = "*"
+lazy_static = "1.2.0"

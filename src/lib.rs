@@ -30,10 +30,13 @@
 //!   }
 //! }
 //! ```
+#[macro_use]
+extern crate lazy_static;
 
 extern crate chrono;
 extern crate glob;
 extern crate memmap;
+extern crate regex;
 extern crate time;
 
 pub use config::*;
@@ -43,6 +46,7 @@ use memmap::Mmap;
 use std::fs::File;
 use std::str;
 use std::time::SystemTime;
+use regex::Regex;
 
 mod config;
 mod utils;
@@ -215,7 +219,11 @@ fn search_line(bytes: &[u8], whitespaces_in_datefields: usize, oldest_ts: u64, c
     }
   };
 
-  let date = utils::parse_date(&extracted_date, &conf.date_pattern);
+  lazy_static! {
+    static ref DATE_CLEAN_REGEX: Regex = Regex::new(r"^(\s+|<|\[)|(\s+|>|\])$").unwrap();
+  }
+  let cleaned_date = DATE_CLEAN_REGEX.replace_all(&extracted_date, "");
+  let date = utils::parse_date(&cleaned_date, &conf.date_pattern);
   match date {
     None => Ok(false),
     Some(date) => {
